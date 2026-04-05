@@ -28,4 +28,5 @@ This app helps students study by summarizing notes and generating quiz questions
 ## Timeline
 Week 11: Setup + proposal  
 Week 12: Core features + AI  
-Week 13: Deployment + CI/CD  
+Week 13: Deployment + CI/CD 
+
