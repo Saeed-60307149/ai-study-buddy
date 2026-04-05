@@ -2,3 +2,5 @@
 venv
 src/venv
 src/.venv
+.env
+src/.env
