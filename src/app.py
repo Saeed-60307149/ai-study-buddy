@@ -26,5 +26,48 @@ def test_db():
     except Exception as e:
         return jsonify({'status': 'error', 'message': str(e)}), 500
 
+from flask import Flask, render_template, jsonify, request
+from datetime import datetime
+
+# ---- SUMMARIZE ROUTE ----
+@app.route('/api/summarize', methods=['POST'])
+def summarize():
+    data = request.get_json()
+    notes = data.get('notes', '')
+    if not notes:
+        return jsonify({'error': 'No notes provided'}), 400
+    # AI integration will replace this placeholder
+    return jsonify({'summary': 'Summary coming soon - AI not connected yet'})
+
+# ---- QUIZ ROUTE ----
+@app.route('/api/quiz', methods=['POST'])
+def quiz():
+    data = request.get_json()
+    notes = data.get('notes', '')
+    if not notes:
+        return jsonify({'error': 'No notes provided'}), 400
+    # AI integration will replace this placeholder
+    return jsonify({'questions': []})
+
+# ---- SESSIONS ROUTES ----
+@app.route('/api/sessions', methods=['GET'])
+def get_sessions():
+    sessions = list(db.sessions.find({}, {'_id': 0}))
+    return jsonify({'sessions': sessions})
+
+@app.route('/api/sessions', methods=['POST'])
+def save_session():
+    data = request.get_json()
+    session = {
+        'notes': data.get('notes', ''),
+        'type': data.get('type', 'summary'),
+        'result': data.get('result', ''),
+        'created_at': datetime.utcnow().isoformat()
+    }
+    db.sessions.insert_one(session)
+    return jsonify({'message': 'Session saved successfully'})
+
+
+
 if __name__ == '__main__':
     app.run(debug=True)
