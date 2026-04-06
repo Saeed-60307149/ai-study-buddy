@@ -1,6 +1,7 @@
-from flask import Flask, render_template, jsonify
+from flask import Flask, render_template, jsonify, request
 from pymongo import MongoClient
 from dotenv import load_dotenv
+from datetime import datetime
 import os
 
 load_dotenv()
@@ -10,6 +11,7 @@ app = Flask(__name__)
 client = MongoClient(os.getenv('MONGO_URI'))
 db = client['study_assistant']
 
+# ---- MAIN ROUTES ----
 @app.route('/')
 def home():
     return render_template('index.html')
@@ -18,6 +20,7 @@ def home():
 def health():
     return jsonify({'status': 'ok'})
 
+# ---- DATABASE TEST ----
 @app.route('/api/test-db')
 def test_db():
     try:
@@ -26,9 +29,6 @@ def test_db():
     except Exception as e:
         return jsonify({'status': 'error', 'message': str(e)}), 500
 
-from flask import Flask, render_template, jsonify, request
-from datetime import datetime
-
 # ---- SUMMARIZE ROUTE ----
 @app.route('/api/summarize', methods=['POST'])
 def summarize():
@@ -36,7 +36,6 @@ def summarize():
     notes = data.get('notes', '')
     if not notes:
         return jsonify({'error': 'No notes provided'}), 400
-    # AI integration will replace this placeholder
     return jsonify({'summary': 'Summary coming soon - AI not connected yet'})
 
 # ---- QUIZ ROUTE ----
@@ -46,7 +45,6 @@ def quiz():
     notes = data.get('notes', '')
     if not notes:
         return jsonify({'error': 'No notes provided'}), 400
-    # AI integration will replace this placeholder
     return jsonify({'questions': []})
 
 # ---- SESSIONS ROUTES ----
@@ -66,8 +64,6 @@ def save_session():
     }
     db.sessions.insert_one(session)
     return jsonify({'message': 'Session saved successfully'})
-
-
 
 if __name__ == '__main__':
     app.run(debug=True)
