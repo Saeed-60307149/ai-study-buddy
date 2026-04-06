@@ -1,6 +1,52 @@
-.venv
-venv
-src/venv
-src/.venv
+# ===========================
+# Python
+# ===========================
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.egg-info/
+dist/
+build/
+
+# ===========================
+# Virtual Environment
+# ===========================
+venv/
+env/
+.venv/
+
+# ===========================
+# Environment Variables
+# NEVER commit secrets
+# ===========================
 .env
-src/.env
+.env.local
+.env.production
+
+# ===========================
+# IDE / Editor
+# ===========================
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# ===========================
+# OS Files
+# ===========================
+.DS_Store
+Thumbs.db
+
+# ===========================
+# Logs
+# ===========================
+*.log
+logs/
+
+# ===========================
+# Testing
+# ===========================
+.pytest_cache/
+htmlcov/
+.coverage
