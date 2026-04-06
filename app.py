@@ -66,4 +66,4 @@ def save_session():
     return jsonify({'message': 'Session saved successfully'})
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(host="0.0.0.0", debug=True)
