@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="dashboard">
+    <h2>Welcome to AI Study Assistant 👋</h2>
+    <p class="subtitle">What would you like to do today?</p>
+
+    <div class="dashboard-grid">
+        <div class="dash-card">
+            <h3>📝 Summarize Notes</h3>
+            <p>Paste your study material and get an AI-generated summary instantly.</p>
+            <a href="/summarize" class="btn">Start</a>
+        </div>
+        <div class="dash-card">
+            <h3>❓ Generate Quiz</h3>
+            <p>Turn your notes into quiz questions to test your understanding.</p>
+            <a href="/quiz" class="btn">Start</a>
+        </div>
+        <div class="dash-card">
+            <h3>📂 Past Sessions</h3>
+            <p>View your saved study sessions and results.</p>
+            <a href="#" class="btn" id="viewSessionsBtn">View</a>
+        </div>
+    </div>
+
+    <div class="sessions-container" id="sessionsContainer" style="display:none;">
+        <h3>📂 Past Sessions</h3>
+        <div id="sessionsList"></div>
+    </div>
+</div>
+{% endblock %}

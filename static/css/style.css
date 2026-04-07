@@ -111,3 +111,148 @@ body {
     color: #555;
     font-size: 0.9rem;
 }
+
+/* ===== DASHBOARD ===== */
+.dashboard h2 {
+    font-size: 1.8rem;
+    margin-bottom: 8px;
+}
+
+.subtitle {
+    color: #666;
+    margin-bottom: 25px;
+}
+
+.dashboard-grid {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+    margin-top: 20px;
+}
+
+.dash-card {
+    background: white;
+    padding: 25px;
+    border-radius: 8px;
+    width: 280px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+.dash-card h3 {
+    margin-bottom: 10px;
+}
+
+.dash-card p {
+    color: #555;
+    margin-bottom: 15px;
+    font-size: 0.9rem;
+}
+
+/* ===== PAGE CONTAINER ===== */
+.page-container {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.page-container h2 {
+    font-size: 1.8rem;
+    margin-bottom: 8px;
+}
+
+/* ===== FORM CARD ===== */
+.form-card {
+    background: white;
+    padding: 25px;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    margin-bottom: 20px;
+}
+
+.form-group {
+    margin-bottom: 18px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 6px;
+    font-weight: bold;
+    font-size: 0.9rem;
+}
+
+.form-group textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 0.95rem;
+    resize: vertical;
+    font-family: Arial, sans-serif;
+}
+
+.form-group textarea:focus {
+    outline: none;
+    border-color: #e94560;
+}
+
+/* ===== RESULT CARD ===== */
+.result-card {
+    background: white;
+    padding: 25px;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    margin-top: 20px;
+}
+
+.result-card h3 {
+    margin-bottom: 15px;
+}
+
+#summaryResult, #quizResult {
+    line-height: 1.7;
+    color: #333;
+    white-space: pre-wrap;
+}
+
+/* ===== BUTTON SECONDARY ===== */
+.btn-secondary {
+    background-color: #444;
+    margin-top: 15px;
+}
+
+.btn-secondary:hover {
+    background-color: #222;
+}
+
+/* ===== LOADING & ERROR ===== */
+.loading {
+    text-align: center;
+    padding: 20px;
+    color: #666;
+    font-size: 1rem;
+}
+
+.error-msg {
+    color: #e94560;
+    font-size: 0.9rem;
+    margin-top: 10px;
+    min-height: 18px;
+}
+
+/* ===== SESSIONS ===== */
+.sessions-container {
+    margin-top: 30px;
+    background: white;
+    padding: 25px;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+.session-item {
+    border-bottom: 1px solid #eee;
+    padding: 12px 0;
+    font-size: 0.9rem;
+}
+
+.session-item:last-child {
+    border-bottom: none;
+}
