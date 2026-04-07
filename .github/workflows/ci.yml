@@ -2,7 +2,11 @@ name: CI
 
 on:
   push:
+    branches:
+      - main
   pull_request:
+    branches:
+      - main
 
 jobs:
   build:
@@ -20,8 +24,27 @@ jobs:
       - name: Install dependencies
         run: pip install -r requirements.txt
 
-      - name: Run app check
-        run: python app.py & sleep 5
+      - name: Run linter
+        run: |
+          pip install flake8
+          flake8 app.py --max-line-length=100 --ignore=E501,W503
+
+      - name: Run unit tests
+        run: |
+          pip install pytest mongomock
+          pytest tests/ -v
 
       - name: Build Docker image
-        run: docker build -t ai-app .
+        run: docker build -t ai-study-buddy .
+
+      - name: Smoke test
+        run: |
+          docker run -d -p 5000:5000 \
+            -e MONGODB_URI="${{ secrets.MONGO_URI }}" \
+            -e SECRET_KEY="${{ secrets.SECRET_KEY }}" \
+            --name test-container ai-study-buddy
+          sleep 10
+          docker logs test-container
+          curl --fail http://localhost:5000/health
+          docker stop test-container
+          docker rm test-container
