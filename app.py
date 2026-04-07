@@ -11,16 +11,17 @@ app = Flask(__name__)
 client = MongoClient(os.getenv('MONGO_URI'))
 db = client['study_assistant']
 
-# ---- MAIN ROUTES ----
+
 @app.route('/')
 def home():
     return render_template('index.html')
+
 
 @app.route('/health')
 def health():
     return jsonify({'status': 'ok'})
 
-# ---- DATABASE TEST ----
+
 @app.route('/api/test-db')
 def test_db():
     try:
@@ -29,7 +30,7 @@ def test_db():
     except Exception as e:
         return jsonify({'status': 'error', 'message': str(e)}), 500
 
-# ---- SUMMARIZE ROUTE ----
+
 @app.route('/api/summarize', methods=['POST'])
 def summarize():
     data = request.get_json()
@@ -38,7 +39,7 @@ def summarize():
         return jsonify({'error': 'No notes provided'}), 400
     return jsonify({'summary': 'Summary coming soon - AI not connected yet'})
 
-# ---- QUIZ ROUTE ----
+
 @app.route('/api/quiz', methods=['POST'])
 def quiz():
     data = request.get_json()
@@ -47,11 +48,12 @@ def quiz():
         return jsonify({'error': 'No notes provided'}), 400
     return jsonify({'questions': []})
 
-# ---- SESSIONS ROUTES ----
+
 @app.route('/api/sessions', methods=['GET'])
 def get_sessions():
     sessions = list(db.sessions.find({}, {'_id': 0}))
     return jsonify({'sessions': sessions})
+
 
 @app.route('/api/sessions', methods=['POST'])
 def save_session():
@@ -65,5 +67,6 @@ def save_session():
     db.sessions.insert_one(session)
     return jsonify({'message': 'Session saved successfully'})
 
+
 if __name__ == '__main__':
-    app.run(host="0.0.0.0", debug=True)
+    app.run(debug=True)
