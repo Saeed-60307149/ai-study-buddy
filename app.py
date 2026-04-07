@@ -8,13 +8,29 @@ load_dotenv()
 
 app = Flask(__name__)
 
-client = MongoClient(os.getenv('MONGO_URI'))
+mongo_uri = os.getenv('MONGODB_URI', 'mongodb://localhost:27017/')
+client = MongoClient(mongo_uri)
 db = client['study_assistant']
 
 
 @app.route('/')
 def home():
     return render_template('index.html')
+
+
+@app.route('/dashboard')
+def dashboard():
+    return render_template('dashboard.html')
+
+
+@app.route('/summarize')
+def summarize_page():
+    return render_template('summarize.html')
+
+
+@app.route('/quiz')
+def quiz_page():
+    return render_template('quiz.html')
 
 
 @app.route('/health')
