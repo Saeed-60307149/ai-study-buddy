@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="page-container">
+    <h2>❓ Generate Quiz Questions</h2>
+    <p class="subtitle">Paste your study notes and get AI-generated quiz questions.</p>
+
+    <div class="form-card">
+        <div class="form-group">
+            <label for="notesInput">Your Notes</label>
+            <textarea 
+                id="notesInput" 
+                placeholder="Paste your study notes here..." 
+                rows="10"
+            ></textarea>
+        </div>
+        <button class="btn" id="quizBtn">Generate Quiz</button>
+    </div>
+
+    <div class="result-card" id="resultCard" style="display:none;">
+        <h3>📋 Quiz Questions</h3>
+        <div id="quizResult"></div>
+        <button class="btn btn-secondary" id="saveSessionBtn">Save Session</button>
+    </div>
+
+    <div class="loading" id="loading" style="display:none;">
+        ⏳ Generating quiz questions...
+    </div>
+
+    <div class="error-msg" id="errorMsg"></div>
+</div>
+{% endblock %}

@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="page-container">
+    <h2>📝 Summarize Your Notes</h2>
+    <p class="subtitle">Paste your study notes below and get an AI-generated summary.</p>
+
+    <div class="form-card">
+        <div class="form-group">
+            <label for="notesInput">Your Notes</label>
+            <textarea 
+                id="notesInput" 
+                placeholder="Paste your study notes here..." 
+                rows="10"
+            ></textarea>
+        </div>
+        <button class="btn" id="summarizeBtn">Generate Summary</button>
+    </div>
+
+    <div class="result-card" id="resultCard" style="display:none;">
+        <h3>📋 Summary</h3>
+        <div id="summaryResult"></div>
+        <button class="btn btn-secondary" id="saveSessionBtn">Save Session</button>
+    </div>
+
+    <div class="loading" id="loading" style="display:none;">
+        ⏳ Generating summary...
+    </div>
+
+    <div class="error-msg" id="errorMsg"></div>
+</div>
+{% endblock %}
