@@ -43,7 +43,7 @@ jobs:
             -e MONGO_URI="${{ secrets.MONGO_URI }}" \
             -e SECRET_KEY="${{ secrets.SECRET_KEY }}" \
             --name test-container ai-study-buddy
-          sleep 5
+          sleep 10
           curl --fail http://localhost:5000/health
           docker stop test-container
           docker rm test-container
