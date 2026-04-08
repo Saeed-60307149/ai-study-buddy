@@ -10,14 +10,21 @@ AI Study Assistant is a Flask-based web application built for students who want 
 
 ---
 
+## 🌐 Live URL
+
+> 🔗 [https://ai-study-buddy-latest-4114.onrender.com](https://ai-study-buddy-latest-4114.onrender.com)
+
+---
+
 ## ✨ Features
 
 | Feature | AI-Powered |
 |---|---|
-| Paste or upload study notes | ❌ |
+| Paste study notes | ❌ |
 | AI-generated note summary | ✅ Gemini API |
 | AI-generated quiz questions | ✅ Gemini API |
 | Save and view past study sessions | ❌ |
+| Dedicated sessions history page | ❌ |
 | Health check endpoint | ❌ |
 
 ---
@@ -33,6 +40,7 @@ AI Study Assistant is a Flask-based web application built for students who want 
 | CI/CD | GitHub Actions | Course standard, integrates natively with GitHub |
 | Deployment | Render.com | Free tier, supports Docker, easy deploy hooks |
 | Containerization | Docker | Ensures consistent environment across machines |
+| Image Registry | Docker Hub | Stores built images for deployment |
 
 ---
 
@@ -46,9 +54,30 @@ AI Study Assistant is a Flask-based web application built for students who want 
 
 ---
 
-## 📁 Project Structure
+## 🏗️ Architecture
+
 ```
-ai-study-assistant/
+Push to main
+→ GitHub Actions CI runs:
+   - Linter (flake8)
+   - Unit tests (pytest — 12 tests)
+   - Docker image build
+   - Smoke test (/health endpoint)
+→ CI passes
+→ CD runs:
+   - Builds and pushes image to Docker Hub
+     (cipher974/ai-study-buddy:latest)
+   - Triggers Render deploy hook
+→ Render pulls latest image and deploys
+→ Live URL updates automatically
+```
+
+---
+
+## 📁 Project Structure
+
+```
+ai-study-buddy/
 │
 ├── app.py                  # Main Flask application
 ├── requirements.txt        # Python dependencies
@@ -57,20 +86,26 @@ ai-study-assistant/
 ├── .gitignore              # Git ignore rules
 │
 ├── templates/              # HTML templates (Jinja2)
-│   ├── base.html           # Base layout template
+│   ├── base.html           # Base layout with navbar
 │   ├── index.html          # Homepage
-│   ├── login.html          # Login page
-│   └── dashboard.html      # Dashboard page
+│   ├── dashboard.html      # Dashboard page
+│   ├── summarize.html      # AI summarize page
+│   ├── quiz.html           # AI quiz page
+│   └── sessions.html       # Past sessions page
 │
 ├── static/
 │   ├── css/
-│   │   └── style.css       # Main stylesheet
+│   │   └── style.css       # Cyberpunk dark theme stylesheet
 │   └── js/
 │       └── script.js       # Frontend JavaScript
 │
+├── tests/
+│   ├── __init__.py
+│   └── test_app.py         # Unit tests (12 tests)
+│
 └── .github/
     └── workflows/
-        └── ci.yml          # GitHub Actions CI pipeline
+        └── ci.yml          # GitHub Actions CI/CD pipeline
 ```
 
 ---
@@ -78,12 +113,14 @@ ai-study-assistant/
 ## ⚙️ Local Setup Instructions
 
 ### 1. Clone the Repository
+
 ```bash
-git clone https://github.com/HBS-oc/ai-study-assistant.git
-cd ai-study-assistant
+git clone https://github.com/HBS-oc/ai-study-buddy.git
+cd ai-study-buddy
 ```
 
 ### 2. Create Virtual Environment
+
 ```bash
 python -m venv venv
 ```
@@ -100,35 +137,40 @@ source venv/bin/activate
 ```
 
 ### 3. Install Dependencies
+
 ```bash
 pip install -r requirements.txt
 ```
 
 ### 4. Set Up Environment Variables
+
 ```bash
 cp .env.example .env
 ```
 
 Open `.env` and fill in your values:
+
 ```
 FLASK_ENV=development
 FLASK_DEBUG=1
-SECRET_KEY=your-secret-key-here
 GEMINI_API_KEY=your-gemini-api-key-here
-MONGO_URI=your-mongodb-connection-string-here
+MONGODB_URI=your-mongodb-connection-string-here
 ```
 
 ### 5. Run the Application
+
 ```bash
 python app.py
 ```
 
 ### 6. Open in Browser
+
 ```
 http://127.0.0.1:5000/
 ```
 
 ### 7. Verify Health Endpoint
+
 ```
 http://127.0.0.1:5000/health
 ```
@@ -143,32 +185,48 @@ Expected response:
 ## 🐳 Run with Docker
 
 ### Build the Image
+
 ```bash
-docker build -t ai-study-assistant .
+docker build -t ai-study-buddy .
 ```
 
 ### Run the Container
+
 ```bash
-docker run -p 5000:5000 --env-file .env ai-study-assistant
+docker run -p 5000:5000 --env-file .env ai-study-buddy
 ```
 
 ### Open in Browser
+
 ```
 http://localhost:5000/
 ```
 
 ---
 
+## 🧪 Run Tests
+
+```bash
+pip install pytest mongomock
+pytest tests/ -v
+```
+
+Expected: 12 tests passing
+
+---
+
 ## 🔀 Branch Strategy
+
 ```
 main          → production-ready code only
-develop       → integration branch
 feature/name  → one branch per feature or task
 fix/issue-N   → bug fixes
+docs/name     → documentation updates
+chore/name    → DevOps and configuration tasks
 ```
 
 All work is done via feature branches and pull requests.
-No direct commits to main or develop.
+No direct commits to main.
 
 ---
 
@@ -182,17 +240,15 @@ No direct commits to main or develop.
 
 ---
 
-## 🌐 Live URL
-
-> 🔗 To be updated after deployment
-
----
-
 ## 📝 API Endpoints
 
 | Method | Endpoint | Description |
 |---|---|---|
 | GET | `/` | Homepage |
+| GET | `/dashboard` | Dashboard page |
+| GET | `/summarize` | Summarize page |
+| GET | `/quiz` | Quiz page |
+| GET | `/sessions` | Sessions history page |
 | GET | `/health` | Health check |
 | GET | `/api/test-db` | Test database connection |
 | POST | `/api/summarize` | Generate AI summary from notes |

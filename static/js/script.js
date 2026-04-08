@@ -36,6 +36,35 @@ if (summarizeBtn) {
     });
 }
 
+// ===== SAVE SESSION — SUMMARIZE PAGE =====
+const saveSessionBtn = document.getElementById('saveSessionBtn');
+if (saveSessionBtn && !document.getElementById('quizResult')) {
+    saveSessionBtn.addEventListener('click', async function () {
+        const notes = document.getElementById('notesInput').value.trim();
+        const result = document.getElementById('summaryResult').textContent;
+
+        if (!result || result === '') {
+            alert('No summary to save yet! Generate a summary first.');
+            return;
+        }
+
+        try {
+            await fetch('/api/sessions', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    notes: notes,
+                    type: 'summary',
+                    result: result
+                })
+            });
+            alert('Session saved successfully!');
+        } catch (error) {
+            alert('Could not save session. Please try again.');
+        }
+    });
+}
+
 // ===== QUIZ PAGE =====
 const quizBtn = document.getElementById('quizBtn');
 if (quizBtn) {
@@ -82,65 +111,6 @@ if (quizBtn) {
     });
 }
 
-// ===== DASHBOARD — VIEW SESSIONS =====
-const viewSessionsBtn = document.getElementById('viewSessionsBtn');
-if (viewSessionsBtn) {
-    viewSessionsBtn.addEventListener('click', async function (e) {
-        e.preventDefault();
-        const sessionsContainer = document.getElementById('sessionsContainer');
-        const sessionsList = document.getElementById('sessionsList');
-
-        try {
-            const response = await fetch('/api/sessions');
-            const data = await response.json();
-
-            if (data.sessions.length === 0) {
-                sessionsList.innerHTML = '<p>No sessions saved yet.</p>';
-            } else {
-                sessionsList.innerHTML = data.sessions.map(s =>
-                    `<div class="session-item">
-                        <strong>${s.type.toUpperCase()}</strong> — ${s.created_at}<br>
-                        <small>${s.notes.substring(0, 100)}...</small>
-                    </div>`
-                ).join('');
-            }
-            sessionsContainer.style.display = 'block';
-        } catch (error) {
-            sessionsList.innerHTML = '<p>Could not load sessions.</p>';
-            sessionsContainer.style.display = 'block';
-        }
-    });
-}
-
-// ===== SAVE SESSION — SUMMARIZE PAGE =====
-const saveSessionBtn = document.getElementById('saveSessionBtn');
-if (saveSessionBtn) {
-    saveSessionBtn.addEventListener('click', async function () {
-        const notes = document.getElementById('notesInput').value.trim();
-        const result = document.getElementById('summaryResult').textContent;
-
-        if (!result) {
-            alert('No summary to save yet!');
-            return;
-        }
-
-        try {
-            await fetch('/api/sessions', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    notes: notes,
-                    type: 'summary',
-                    result: result
-                })
-            });
-            alert('Session saved successfully!');
-        } catch (error) {
-            alert('Could not save session. Please try again.');
-        }
-    });
-}
-
 // ===== SAVE SESSION — QUIZ PAGE =====
 const saveQuizBtn = document.getElementById('saveSessionBtn');
 if (saveQuizBtn && document.getElementById('quizResult')) {
@@ -148,8 +118,8 @@ if (saveQuizBtn && document.getElementById('quizResult')) {
         const notes = document.getElementById('notesInput').value.trim();
         const result = document.getElementById('quizResult').textContent;
 
-        if (!result) {
-            alert('No quiz to save yet!');
+        if (!result || result === 'No questions generated. Try with more detailed notes.') {
+            alert('No quiz questions to save yet! Generate a quiz first.');
             return;
         }
 
@@ -170,3 +140,67 @@ if (saveQuizBtn && document.getElementById('quizResult')) {
     });
 }
 
+// ===== DASHBOARD — VIEW SESSIONS =====
+const viewSessionsBtn = document.getElementById('viewSessionsBtn');
+if (viewSessionsBtn) {
+    viewSessionsBtn.addEventListener('click', async function (e) {
+        e.preventDefault();
+        const sessionsContainer = document.getElementById('sessionsContainer');
+        const sessionsList = document.getElementById('sessionsList');
+
+        try {
+            const response = await fetch('/api/sessions');
+            const data = await response.json();
+
+            if (data.sessions.length === 0) {
+                sessionsList.innerHTML = '<p style="color: var(--text-secondary);">No sessions saved yet.</p>';
+            } else {
+                sessionsList.innerHTML = data.sessions.map(s =>
+                    `<div class="session-item">
+                        <strong>${s.type.toUpperCase()}</strong> — ${s.created_at}<br>
+                        <small>${s.notes.substring(0, 100)}...</small>
+                    </div>`
+                ).join('');
+            }
+            sessionsContainer.style.display = 'block';
+        } catch (error) {
+            sessionsList.innerHTML = '<p style="color: var(--neon-pink);">Could not load sessions.</p>';
+            sessionsContainer.style.display = 'block';
+        }
+    });
+}
+
+// ===== SESSIONS PAGE — AUTO LOAD =====
+const sessionsList = document.getElementById('sessionsList');
+if (sessionsList && !document.getElementById('viewSessionsBtn')) {
+    fetch('/api/sessions')
+        .then(response => response.json())
+        .then(data => {
+            if (data.sessions.length === 0) {
+                sessionsList.innerHTML = `
+                    <p style="color: var(--text-secondary);">
+                        No sessions saved yet. Generate a summary
+                        or quiz and click Save Session!
+                    </p>`;
+            } else {
+                sessionsList.innerHTML = data.sessions.map(s =>
+                    `<div class="session-item">
+                        <strong>${s.type.toUpperCase()}</strong>
+                        — ${s.created_at}<br>
+                        <small style="color: var(--text-secondary);">
+                            ${s.notes.substring(0, 100)}...
+                        </small><br>
+                        <small style="color: var(--neon-green);">
+                            ${s.result.substring(0, 150)}...
+                        </small>
+                    </div>`
+                ).join('');
+            }
+        })
+        .catch(() => {
+            sessionsList.innerHTML = `
+                <p style="color: var(--neon-pink);">
+                    Could not load sessions. Please try again.
+                </p>`;
+        });
+}
