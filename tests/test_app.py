@@ -6,7 +6,7 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 @pytest.fixture
 def client(monkeypatch):
-    monkeypatch.setenv('MONGO_URI', 'mongodb://localhost:27017/')
+    monkeypatch.setenv('MONGODB_URI', 'mongodb://localhost:27017/')
     import mongomock
     monkeypatch.setattr('pymongo.MongoClient', mongomock.MongoClient)
     import app as flask_app
