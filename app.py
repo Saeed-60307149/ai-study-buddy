@@ -89,12 +89,15 @@ def quiz():
         return jsonify({'error': 'No notes provided'}), 400
     try:
         prompt = f"""You are a study assistant.
-Generate 5 quiz questions based on the following
+Generate exactly 5 quiz questions based on the following
 study notes. For each question provide the answer.
 
-Format your response exactly like this for each question:
-Q: [question here]
-A: [answer here]
+You MUST use exactly this format with no extra text:
+Q: question here
+A: answer here
+
+Q: question here
+A: answer here
 
 Notes:
 {notes}
@@ -105,14 +108,19 @@ Notes:
         )
         raw = response.text.strip()
         questions = []
-        blocks = raw.split('\n\n')
-        for block in blocks:
-            lines = block.strip().split('\n')
-            if len(lines) >= 2:
-                q = lines[0].replace('Q:', '').strip()
-                a = lines[1].replace('A:', '').strip()
-                if q and a:
+        lines = raw.split('\n')
+        i = 0
+        while i < len(lines):
+            line = lines[i].strip()
+            if line.startswith('Q:'):
+                q = line[2:].strip()
+                a = ''
+                if i + 1 < len(lines) and lines[i + 1].strip().startswith('A:'):
+                    a = lines[i + 1].strip()[2:].strip()
+                    i += 1
+                if q:
                     questions.append({'question': q, 'answer': a})
+            i += 1
         return jsonify({'questions': questions})
     except Exception as e:
         return jsonify({'error': f'AI service error: {str(e)}'}), 500
