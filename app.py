@@ -40,7 +40,7 @@ def quiz_page():
 
 
 # ---- HEALTH CHECK ----
-@app.route('/api/health')
+@app.route('/health')
 def health():
     return jsonify({'status': 'ok'})
 
