@@ -64,14 +64,14 @@ def summarize():
     if not notes:
         return jsonify({'error': 'No notes provided'}), 400
     try:
-        prompt = f"""You are a study assistant. 
-        Summarize the following study notes in a clear, 
-        concise and easy to understand way. 
-        Use bullet points where appropriate.
+        prompt = f"""You are a study assistant.
+Summarize the following study notes in a clear,
+concise and easy to understand way.
+Use bullet points where appropriate.
 
-        Notes:
-        {notes}
-        """
+Notes:
+{notes}
+"""
         response = model.generate_content(prompt)
         return jsonify({'summary': response.text})
     except Exception as e:
@@ -87,16 +87,16 @@ def quiz():
         return jsonify({'error': 'No notes provided'}), 400
     try:
         prompt = f"""You are a study assistant.
-        Generate 5 quiz questions based on the following 
-        study notes. For each question provide the answer.
-        
-        Format your response exactly like this for each question:
-        Q: [question here]
-        A: [answer here]
+Generate 5 quiz questions based on the following
+study notes. For each question provide the answer.
 
-        Notes:
-        {notes}
-        """
+Format your response exactly like this for each question:
+Q: [question here]
+A: [answer here]
+
+Notes:
+{notes}
+"""
         response = model.generate_content(prompt)
         raw = response.text.strip()
         questions = []
