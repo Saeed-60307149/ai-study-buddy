@@ -2,7 +2,7 @@ from flask import Flask, render_template, jsonify, request
 from pymongo import MongoClient
 from dotenv import load_dotenv
 from datetime import datetime
-import google.generativeai as genai
+from google import genai
 import os
 
 load_dotenv()
@@ -15,8 +15,7 @@ client = MongoClient(mongo_uri)
 db = client['study_assistant']
 
 # ---- GEMINI SETUP ----
-genai.configure(api_key=os.getenv('GEMINI_API_KEY'))
-model = genai.GenerativeModel('gemini-2.0-flash')
+genai_client = genai.Client(api_key=os.getenv('GEMINI_API_KEY'))
 
 
 # ---- PAGE ROUTES ----
@@ -72,7 +71,10 @@ Use bullet points where appropriate.
 Notes:
 {notes}
 """
-        response = model.generate_content(prompt)
+        response = genai_client.models.generate_content(
+            model='gemini-2.0-flash',
+            contents=prompt
+        )
         return jsonify({'summary': response.text})
     except Exception as e:
         return jsonify({'error': f'AI service error: {str(e)}'}), 500
@@ -97,7 +99,10 @@ A: [answer here]
 Notes:
 {notes}
 """
-        response = model.generate_content(prompt)
+        response = genai_client.models.generate_content(
+            model='gemini-2.0-flash',
+            contents=prompt
+        )
         raw = response.text.strip()
         questions = []
         blocks = raw.split('\n\n')
