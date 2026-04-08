@@ -29,18 +29,18 @@ def dashboard():
     return render_template('dashboard.html')
 
 
-@app.route('/summarize')
+@app.route('/api/summarize')
 def summarize_page():
     return render_template('summarize.html')
 
 
-@app.route('/quiz')
+@app.route('/api/quiz')
 def quiz_page():
     return render_template('quiz.html')
 
 
 # ---- HEALTH CHECK ----
-@app.route('/health')
+@app.route('/api/health')
 def health():
     return jsonify({'status': 'ok'})
 
