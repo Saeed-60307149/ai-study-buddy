@@ -41,6 +41,7 @@ jobs:
         run: |
           docker run -d -p 5000:5000 \
             -e MONGODB_URI="${{ secrets.MONGODB_URI }}" \
+            -e GEMINI_API_KEY="${{ secrets.GEMINI_API_KEY }}" \
             --name test-container cipher974/ai-study-buddy
           sleep 10
           docker logs test-container

@@ -66,7 +66,10 @@ if (quizBtn) {
 
             if (data.questions && data.questions.length > 0) {
                 quizResult.innerHTML = data.questions.map((q, i) =>
-                    `<div class="session-item"><strong>Q${i+1}:</strong> ${q}</div>`
+                    `<div class="session-item">
+                        <strong>Q${i + 1}: ${q.question}</strong><br>
+                        <span style="color: var(--neon-green);">A: ${q.answer}</span>
+                    </div>`
                 ).join('');
             } else {
                 quizResult.textContent = 'No questions generated. Try with more detailed notes.';
@@ -105,6 +108,64 @@ if (viewSessionsBtn) {
         } catch (error) {
             sessionsList.innerHTML = '<p>Could not load sessions.</p>';
             sessionsContainer.style.display = 'block';
+        }
+    });
+}
+
+// ===== SAVE SESSION — SUMMARIZE PAGE =====
+const saveSessionBtn = document.getElementById('saveSessionBtn');
+if (saveSessionBtn) {
+    saveSessionBtn.addEventListener('click', async function () {
+        const notes = document.getElementById('notesInput').value.trim();
+        const result = document.getElementById('summaryResult').textContent;
+
+        if (!result) {
+            alert('No summary to save yet!');
+            return;
+        }
+
+        try {
+            await fetch('/api/sessions', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    notes: notes,
+                    type: 'summary',
+                    result: result
+                })
+            });
+            alert('Session saved successfully!');
+        } catch (error) {
+            alert('Could not save session. Please try again.');
+        }
+    });
+}
+
+// ===== SAVE SESSION — QUIZ PAGE =====
+const saveQuizBtn = document.getElementById('saveSessionBtn');
+if (saveQuizBtn && document.getElementById('quizResult')) {
+    saveQuizBtn.addEventListener('click', async function () {
+        const notes = document.getElementById('notesInput').value.trim();
+        const result = document.getElementById('quizResult').textContent;
+
+        if (!result) {
+            alert('No quiz to save yet!');
+            return;
+        }
+
+        try {
+            await fetch('/api/sessions', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    notes: notes,
+                    type: 'quiz',
+                    result: result
+                })
+            });
+            alert('Session saved successfully!');
+        } catch (error) {
+            alert('Could not save session. Please try again.');
         }
     });
 }
