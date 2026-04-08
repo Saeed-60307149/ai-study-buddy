@@ -29,12 +29,12 @@ def dashboard():
     return render_template('dashboard.html')
 
 
-@app.route('/api/summarize')
+@app.route('/summarize')
 def summarize_page():
     return render_template('summarize.html')
 
 
-@app.route('/api/quiz')
+@app.route('/quiz')
 def quiz_page():
     return render_template('quiz.html')
 
